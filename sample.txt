@@ -23,3 +23,32 @@ driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS); driver.findEleme
  
 }
 }
+
+---
+- hosts: all
+  become: true
+  tasks:
+  - name: Install Git
+    package:
+     name: git
+     state: present
+
+  - name: Run update
+    yum:
+     update_cache: true
+
+  - name: Install jdk
+    package:
+     name: java-1.8.0-openjdk
+     state: present
+
+  - name: Install chromium browser
+    command: sudo sh -c 'echo -e "[google-chrome]\nname=google-chrome - 64-bit\nbaseurl=http://dl.google.com/linux/chrome/rpm/stable/x86_64\nenabled=1\ngpgcheck=1\ngpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub" >> /etc/yum.repos.d/google-chrome.repo'
+  - name: update
+    command: sudo yum -y update
+  - name: Inatall chromium
+    command: sudo yum install -y google-chrome-stable
+
+  - name: Run update
+    yum:
+     update_cache: yes
